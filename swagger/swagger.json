@@ -1,0 +1,507 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Quiz application",
+    "description": "This is API specification.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001/api/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Auth related API"
+    },
+    {
+      "name": "Quiz",
+      "description": "Quiz related API"
+    }
+  ],
+  "paths": {
+    "/user/signUp": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User signUp",
+        "description": "Create a new user",
+        "operationId": "signUp",
+        "requestBody": {
+          "description": "signUp",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/signUpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registration successfully.",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "User Information"
+      }
+    },
+    "/user/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User Login",
+        "description": "Login as an user",
+        "operationId": "login",
+        "requestBody": {
+          "description": "login credentials",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminLoginResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/quiz/create": {
+      "post": {
+        "tags": ["Quiz"],
+        "summary": "Quiz create",
+        "description": "Create a new Quiz",
+        "operationId": "Quiz",
+        "requestBody": {
+          "description": "Quiz",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createQuiz"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create quiz successfully.",
+            "content": {}
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        },
+        "x-codegen-request-body-name": "User Information"
+      }
+    },
+    "/quiz/list": {
+      "get": {
+        "tags": ["Quiz"],
+        "summary": "Get All Quiz API",
+        "description": "Get All Quiz API",
+        "operationId": "Quiz all",
+        "responses": {
+          "200": {
+            "description": "All Quiz Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllRoleInformation"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/quiz/detail": {
+      "get": {
+        "tags": ["Quiz"],
+        "summary": "Get Quiz detail API by ID",
+        "description": "Get Quiz detail by id",
+        "operationId": "Quiz detail",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "description": "Quiz ID",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quiz detail Information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllRoleInformation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - ID parameter is missing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/quiz/answers": {
+      "post": {
+        "tags": ["Quiz"],
+        "summary": "Quiz answers API",
+        "description": "Submit answers for a specific quiz question",
+        "operationId": "submitQuizAnswers",
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "requestBody": {
+          "description": "Answer submission for a quiz question",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "quizId": {
+                    "type": "integer",
+                    "description": "ID of the quiz",
+                    "example": 5
+                  },
+                  "questionId": {
+                    "type": "integer",
+                    "description": "ID of the question being answered",
+                    "example": 15
+                  },
+                  "selectedOption": {
+                    "type": "string",
+                    "description": "The selected answer option",
+                    "example": "3"
+                  }
+                },
+                "required": ["quizId", "questionId", "selectedOption"]
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Answer submitted successfully.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Answer submitted successfully"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request - Missing or invalid parameters.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized - Missing or invalid token.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorResponse"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error.",
+              "content": {}
+            }
+          }
+        }
+      }
+    },
+    "/quiz/result": {
+      "get": {
+        "tags": ["Quiz"],
+        "summary": "Get Quiz Result",
+        "description": "Get the result of a quiz by quiz ID",
+        "operationId": "getQuizResult",
+        "security": [
+          {
+            "Token": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "quizId",
+            "in": "query",
+            "description": "ID of the quiz to retrieve the result for",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the quiz result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "quizId": {
+                      "type": "integer",
+                      "example": 5
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "correctAnswers": {
+                          "type": "integer",
+                          "example": 8
+                        },
+                        "totalQuestions": {
+                          "type": "integer",
+                          "example": 10
+                        },
+                        "score": {
+                          "type": "number",
+                          "format": "float",
+                          "example": 80.0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Missing or invalid `quizId` parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Invalid quizId"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Quiz not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Quiz not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "signUpRequest": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "loginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "admin"
+          },
+          "password": {
+            "type": "string",
+            "example": "admin123"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "createQuiz": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "questions": {
+            "type": "array",
+            "description": "List of quiz questions",
+            "items": {
+              "type": "object",
+              "properties": {
+                "question": {
+                  "type": "string"
+                },
+                "options": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "correct_option": {
+                  "type": "integer"
+                }
+              },
+              "required": ["question", "options", "correct_option"]
+            }
+          }
+        },
+        "required": ["title", "questions"]
+      },
+      "AdminLoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          },
+          "message": {
+            "type": "string",
+            "example": "Login successful"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "Unauthorized"
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Token": {
+        "type": "apiKey",
+        "description": "Example value:- Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjU5MmQwMGJhNTJjYjJjM",
+        "name": "Token",
+        "in": "header"
+      }
+    }
+  }
+}
