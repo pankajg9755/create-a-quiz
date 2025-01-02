@@ -7,9 +7,9 @@ const initializeDatabase = {
   development: {
     client: process.env.DB_DIALECT || "mysql2",
     connection: {
-      host: process.env.DB_HOST || "wfsdb.mysql.database.azure.com",
-      user: process.env.DB_USER || "wfsadmin",
-      password: process.env.DB_PASSWORD || "worldofstones@123",
+      host: process.env.DB_HOST || "",
+      user: process.env.DB_USER || "",
+      password: process.env.DB_PASSWORD || "",
       database: process.env.DB_NAME || "quizApp",
     },
     debug: false,

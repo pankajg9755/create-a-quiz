@@ -12,6 +12,7 @@ import fs from 'fs';
 import Constant from "./constants/constant.js";
 import httpConstants from "./constants/http.js";
 dotenv.config();
+
 const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -43,7 +44,7 @@ app.use(
 app.use(helmet());
 app.use(helmet.frameguard());
 app.use(helmet.xssFilter());
-app.use(helmet.hidePoweredBy({ setTo: "PHP 4.2.0" }));
+app.use(helmet.z({ setTo: "PHP 4.2.0" }));
 
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
@@ -79,18 +80,15 @@ app.use((err, req, res, next) => {
   }
 });
 
+// handler swagger
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const swaggerFilePath = path.join(__dirname, 'swagger', 'swagger.json');
-
 console.log(`Attempting to read the file at: ${swaggerFilePath}`);
-
 // Read the JSON file
 const swaggerDoc = JSON.parse(fs.readFileSync(swaggerFilePath, 'utf8'));
-
 // Setup Swagger UI
-
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 const filePath = path.join(__dirname, 'swagger', 'swagger.json');
 
@@ -102,6 +100,7 @@ fs.readFile(filePath, 'utf8', (err, data) => {
     console.log('File content:', JSON.parse(data));
   }
 });
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

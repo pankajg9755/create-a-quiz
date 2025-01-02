@@ -25,6 +25,24 @@ Install all necessary dependencies using:
 npm install
 ```
 
+### **Configure Environment Variables**
+
+Create a .env file in the root directory and add the following variables:
+
+```bash
+NODE_ENV=development
+APP_NAME=quizApp
+SERVER_PORT=5001
+DB_NAME=quizApp
+DB_USER=admin
+DB_PASSWORD=admin
+DB_HOST=
+DB_PORT=3306
+DB_DIALECT=mysql2
+```
+
+Update the values as per your local setup.
+
 ### **Run Migrations**
 
 Set up the database by running migrations:
