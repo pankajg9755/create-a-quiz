@@ -69,6 +69,16 @@ http://localhost:5001/api
 
 http://localhost:5001/api-docs/
 
+### **Build and Run the Docker Containers**
+
+In the root of your project, run the following commands:
+
+```bash
+docker-compose build
+docker-compose up
+
+```
+
 ## **API Endpoints**
 
 ### **1. Create Quiz**
