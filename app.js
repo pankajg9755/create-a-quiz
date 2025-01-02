@@ -44,7 +44,7 @@ app.use(
 app.use(helmet());
 app.use(helmet.frameguard());
 app.use(helmet.xssFilter());
-app.use(helmet.z({ setTo: "PHP 4.2.0" }));
+app.use(helmet.hidePoweredBy({ setTo: "PHP 4.2.0" }));
 
 app.use((err, req, res, next) => {
   if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
